@@ -1,0 +1,69 @@
+<html>
+<head>
+    <meta charset="utf-8" />
+    <title>Smile</title>
+    <style>* { padding: 0; margin: 0; } canvas { background: #eee; display: block; margin: 0 auto; }</style>
+</head>
+<body bgcolor="#000000">
+<canvas id="myCanvas" width="1" height="1"></canvas>
+
+<script>
+
+    var canvas = document.getElementById("myCanvas");
+    var ctx = canvas.getContext("2d");
+    ctx.canvas.width  = window.innerWidth;
+    ctx.canvas.height = window.innerHeight;
+    
+    var time = 0;
+    var confetti = [];
+    
+    function draw(){
+        ctx.fillStyle = "#000";
+        ctx.fillRect(0, 0, canvas.width, canvas.height);
+    
+        var toremove = [];
+        for (var i = 0; i < confetti.length; i++){
+            var c = confetti[i];
+            ctx.fillStyle = c.color;
+            ctx.beginPath();
+            ctx.arc(c.x * canvas.width / 100, c.y * canvas.height / 100, c.size * canvas.height / 100, 0, 2 * Math.PI, false);
+            ctx.fill();
+            c.x += c.vx;
+            c.y += c.vy;
+            c.vy += 0.05;
+            if (c.y > 100) {
+                toremove.push(c);
+            }
+        }
+        
+        for (var i = 0; i < toremove.length; i++){
+            var c = toremove[i];
+            var index = confetti.indexOf(c);
+            if (index > -1) {
+                  confetti.splice(index, 1);
+            }
+        }
+        
+        var colors = ["#ff0", "#0ff", "00f", "#f00", "#0f0", "#f0f"];
+        var maxspe = 0.8;
+        if (time % 4 == 0) {
+            confetti.push({size:3, 
+                color:colors[Math.floor(Math.random()*colors.length)],
+                x:50, y:100, vx:Math.random() * maxspe * 2 - maxspe, vy:-3});
+        }
+        
+        time++;
+        
+        ctx.textAlign = "center";
+        ctx.fillStyle = "#fff";
+        ctx.font = "" + Math.floor(canvas.height / 6) + "px Arial";
+        ctx.fillText("Happy Birthday!", canvas.width / 2, canvas.height / 2);
+        
+        requestAnimationFrame(draw);
+    }
+    draw();    
+
+</script>
+
+</body>
+</html>
